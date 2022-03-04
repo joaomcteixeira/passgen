@@ -11,6 +11,7 @@ USAGE:
 """
 import argparse
 import random
+import secrets
 import string
 from contextlib import suppress
 
@@ -74,14 +75,14 @@ def main(l=16, lo=True, up=True, di=True, pu=True, disable=None):
     pass_chars = []
     for char_type, user_choice in choices.items():
         if user_choice:
-            pass_chars.append(random.choice(CA[char_type]))
+            pass_chars.append(secrets.choice(CA[char_type]))
             l -= 1
 
     # all possible chars according to the user choices
     all_chars = ''.join(opt for typ, opt in CA.items() if choices[typ])
 
     # chooses chars for the remaining pass length
-    rest_chars = random.choices(all_chars, k=l)
+    rest_chars = [secrets.choice(all_chars) for _ in range(l)]
 
     # joins the first unique-type chars with the random selection
     password = pass_chars + rest_chars
