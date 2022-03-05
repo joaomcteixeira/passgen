@@ -21,6 +21,10 @@ class _JoinDisable(argparse.Action):
         setattr(namespace, self.dest, disable)
 
 
+class InputError(Exception):
+    pass
+
+
 ap = argparse.ArgumentParser(description=__doc__)
 
 ap.add_argument('-l', help='Password length. Defaults to 16.', default=16, type=int)
@@ -81,7 +85,14 @@ def main(l=16, lo=True, up=True, di=True, pu=True, disable=None):
     all_chars = ''.join(opt for typ, opt in CA.items() if choices[typ])
 
     # chooses chars for the remaining pass length
-    rest_chars = random.choices(all_chars, k=l)
+    try:
+        rest_chars = random.choices(all_chars, k=l)
+    except IndexError:
+        raise InputError(
+            'There are no characters left to create a password. '
+            'You have likely disabled all of them. '
+            'Please review your input. '
+            ) from None
 
     # joins the first unique-type chars with the random selection
     password = pass_chars + rest_chars
