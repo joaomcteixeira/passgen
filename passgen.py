@@ -52,6 +52,8 @@ chars_possibilities = {
 
 def main(l=16, lo=True, up=True, di=True, pu=True, disable=None):
     """Create a password."""
+    original_len = l
+
     # maps CLI choices
     choices = {
         'lower': lo,
@@ -62,7 +64,7 @@ def main(l=16, lo=True, up=True, di=True, pu=True, disable=None):
 
     CA = chars_possibilities
 
-    # removes disable chars. Simplistic implementation
+    # disables chars. Simplistic implementation
     if disable:
         for char_type, chars in CA.items():
             char_list = list(chars)
@@ -87,10 +89,15 @@ def main(l=16, lo=True, up=True, di=True, pu=True, disable=None):
     # joins the first unique-type chars with the random selection
     password = pass_chars + rest_chars
 
-    # further shuffles
-    random.shuffle(password)
+    # further shuffles the password
+    len_range = list(range(original_len))
+    final_pass = ''
+    while len_range:
+        idx = secrets.choice(len_range)
+        final_pass += password[idx]
+        len_range.remove(idx)
 
-    print(''.join(password))
+    print(final_pass)
 
 
 if __name__ == '__main__':
