@@ -8,6 +8,7 @@ USAGE:
     $ python passgen.py -h
     $ python passgen.py
     $ python passgen.py -pu
+    $ python passgen.py -pum  # uses only -_$%& chars as punctuation
 """
 import argparse
 import random
@@ -26,14 +27,17 @@ class InputError(Exception):
     pass
 
 
-ap = argparse.ArgumentParser(description=__doc__)
+ap = argparse.ArgumentParser(
+    description=__doc__,
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
 
 ap.add_argument('-l', help='Password length. Defaults to 16.', default=16, type=int)
 ap.add_argument('-lo', help='Disable lower case chars.', action="store_false")
 ap.add_argument('-up', help='Disable upper case chars.', action="store_false")
 ap.add_argument('-di', help='Disable digits.', action="store_false")
 ap.add_argument('-pu', help='Disable punctuation.', action="store_false")
-ap.add_argument('-pum', help='Punctuation only with more normal chars.', action="store_true")
+ap.add_argument('-pum', help='Uses minimal punctuation chars.', action="store_true")
 ap.add_argument(
     '-D',
     '--disable',
