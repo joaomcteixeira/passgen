@@ -8,6 +8,7 @@ USAGE:
     $ python passgen.py -h
     $ python passgen.py
     $ python passgen.py -pu
+    $ python passgen.py -pum  # uses only -_$%& chars as punctuation
 """
 import argparse
 import random
@@ -26,13 +27,17 @@ class InputError(Exception):
     pass
 
 
-ap = argparse.ArgumentParser(description=__doc__)
+ap = argparse.ArgumentParser(
+    description=__doc__,
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
 
 ap.add_argument('-l', help='Password length. Defaults to 16.', default=16, type=int)
 ap.add_argument('-lo', help='Disable lower case chars.', action="store_false")
 ap.add_argument('-up', help='Disable upper case chars.', action="store_false")
 ap.add_argument('-di', help='Disable digits.', action="store_false")
 ap.add_argument('-pu', help='Disable punctuation.', action="store_false")
+ap.add_argument('-pum', help='Uses minimal punctuation chars.', action="store_true")
 ap.add_argument(
     '-D',
     '--disable',
@@ -51,10 +56,11 @@ chars_possibilities = {
     'upper': string.ascii_uppercase,
     'digits': string.digits,
     'punctuation': string.punctuation,
+    'pum': r"-_$%&",
     }
 
 
-def main(l=16, lo=True, up=True, di=True, pu=True, disable=None):
+def main(l=16, lo=True, up=True, di=True, pu=True, pum=False, disable=None):
     """Create a password."""
     original_len = l
 
@@ -63,7 +69,8 @@ def main(l=16, lo=True, up=True, di=True, pu=True, disable=None):
         'lower': lo,
         'upper': up,
         'digits': di,
-        'punctuation': pu,
+        'punctuation': pu and not pum,
+        'pum': pum
         }
 
     CA = chars_possibilities
