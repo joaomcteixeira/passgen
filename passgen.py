@@ -14,7 +14,9 @@ import argparse
 import random
 import secrets
 import string
+import time
 from contextlib import suppress
+from tkinter import Tk
 
 
 class _JoinDisable(argparse.Action):
@@ -118,7 +120,12 @@ def main(l=16, lo=True, up=True, di=True, pu=True, pum=False, url=False, disable
         final_pass += password[idx]
         len_range.remove(idx)
 
-    print(final_pass)
+    r = Tk()
+    r.withdraw()
+    r.clipboard_clear()
+    r.clipboard_append(final_pass)
+    r.update()
+    r.destroy()
 
 
 if __name__ == '__main__':
